@@ -1,4 +1,5 @@
 # Healthcare Price-Transparency Rate Match
+[![tests](https://github.com/richmcshinsky/tic-hpt-rate-match/actions/workflows/test.yml/badge.svg)](https://github.com/richmcshinsky/tic-hpt-rate-match/actions/workflows/test.yml)
 
 **Author:** Richard McShinsky · **LinkedIn:** [Richard McShinsky](https://www.linkedin.com/in/richard-mcshinsky/)
 
@@ -13,7 +14,7 @@ The intent is not to ship a production matcher. It is to make a defensible set o
 ## How to run
 
 ```bash
-pip install pandas pytest
+pip install -r requirements.txt
 python -m core.run                # uses defaults: data/*.csv → out/unified_rates.csv
 python -m pytest tests/ -q        # normalizer + matcher tests
 ```
