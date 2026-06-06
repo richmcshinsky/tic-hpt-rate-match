@@ -1,0 +1,17 @@
+{
+  "_comment": "Maps lowercased / punctuation-stripped payer name strings to canonical payer keys. Extend by appending. The three canonical keys ('aetna','cigna','unitedhealthcare') were chosen to mirror the values in the TiC sample.",
+  "aliases": {
+    "aetna": "aetna",
+    "aetna inc": "aetna",
+    "aetna health inc": "aetna",
+    "cigna": "cigna",
+    "cigna corporation": "cigna",
+    "cigna health and life insurance company": "cigna",
+    "uhc": "unitedhealthcare",
+    "united": "unitedhealthcare",
+    "united healthcare": "unitedhealthcare",
+    "unitedhealthcare": "unitedhealthcare",
+    "united health care": "unitedhealthcare",
+    "unitedhealth group": "unitedhealthcare"
+  }
+}

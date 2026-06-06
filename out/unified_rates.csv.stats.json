@@ -1,0 +1,19 @@
+{
+  "hpt_match_groups": 37,
+  "hpt_rows_dropped_local": 410,
+  "hpt_rows_dropped_no_dollar": 265,
+  "hpt_rows_dropped_no_payer": 1966,
+  "hpt_rows_input": 2950,
+  "hpt_rows_match_eligible": 309,
+  "matches_pass1": 20,
+  "matches_pass2": 13,
+  "output_rows": 41,
+  "rate_corroborated_blocks": 6,
+  "rate_corroborated_rows": 11,
+  "tic_match_groups": 34,
+  "tic_rows_after_filter": 219,
+  "tic_rows_dropped_percentage": 3,
+  "tic_rows_input": 222,
+  "unmatched_hpt": 4,
+  "unmatched_tic": 4
+}

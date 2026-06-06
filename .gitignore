@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+out/
+.DS_Store
+__MACOSX/
