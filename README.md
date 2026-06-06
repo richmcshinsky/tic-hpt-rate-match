@@ -1,4 +1,5 @@
 # Healthcare Price-Transparency Rate Match
+
 [![tests](https://github.com/richmcshinsky/tic-hpt-rate-match/actions/workflows/test.yml/badge.svg)](https://github.com/richmcshinsky/tic-hpt-rate-match/actions/workflows/test.yml)
 
 **Author:** Richard McShinsky · **LinkedIn:** [Richard McShinsky](https://www.linkedin.com/in/richard-mcshinsky/)
