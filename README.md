@@ -154,18 +154,16 @@ The instructive part is that my current grain does **not** surface it as a clean
 
 **"What columns change when the price varies?"** Within a single `(hospital, code, payer)` group, the rate moves with `billing_class` (facility vs professional — the biggest lever), the TiC NPI sub-group / network, and the HPT `plan_name` / `methodology`. **"Can any of the other records be aligned?"** Yes — and the pipeline now does: the **rate-value corroboration pass** (Pass 3, see *Matching beyond the deterministic join*) flags this block with `rate_value_corroborated = True` and `corroborated_values = 6438.00`, so the `$6,438 ↔ $6,438` agreement is recovered as an evidence signal even though the median grain placed the two postings on different rows. That is the line-item alignment the brief is asking for, surfaced without over-trusting the billing-class inference that split them.
 
-The literal `$29,259.18` the brief attributes to Montefiore is not
-    in this sample at Montefiore — it appears once in HPT at Mount
-    Sinai × Aetna × DRG 872, and the TiC side has no Aetna DRG 872 rate
-    for any of the three hospitals. The phenomenon the brief points at
-    — commercial DRG postings present on HPT and absent on TiC —
-    reproduces exactly (see below).
+The literal `$29,259.18` is in this sample — but at **Mount Sinai**, not Montefiore (the same wrong-hospital twist as the `$6,438` example; the brief's attribution looks drawn from an older sample). It is a Mount Sinai HPT posting for Aetna × DRG 872.
 
 > *"Montefiore Medical Center lists Aetna PPO rates for DRG 872 at 29259.18. Do you see that rate in the Aetna TIC extract? (Hint: You will not.)"*
 
-This is the expected gap, and the pipeline reproduces it. Montefiore **does** list Aetna against DRG 872 in HPT — three plans (ASA, Medicare, Commercial), median $45,907.79, range $13,434.30–$51,350.81 — and the TiC side has **no** Aetna DRG 872 rate at all, so every one of those collapses to `data_source=hpt_only`. NYU Langone shows the same pattern even more starkly: 18 Aetna 872 plans in HPT (median $25,883.26, range $10,076.87–$93,157.15), no Aetna TiC match, all `hpt_only`. The exact $29,259.18 is not in this sample, but the phenomenon the brief is pointing at — commercial DRG postings present on the hospital side and absent on the payer side — is exactly what the `hpt_only` bucket is capturing.
+The hint holds, but the mechanism is richer than a simple absence, because TiC **does** carry Aetna DRG 872 (6 rows, all Mount Sinai institutional, median **$13,365**):
 
-**The entity-resolution gap I am keying around.** This pipeline joins on the hospital EIN (from the HPT filename) and collapses TiC across all NPIs in each sub-group. For the three NY academic systems here, the facility and its physicians sit under one EIN, so that holds. It does not generalize: at a Sutter or an Ascension the physician group is frequently a separate legal entity with its own TIN/NPI and its own MRF, so the institutional rate lives under the hospital EIN while the professional rate lives under a group TIN the EIN-key never sees — and those matches fall on the floor as one-sided rows. The correct fix is an upstream EIN↔TIN↔NPI crosswalk seeded from NPPES (and the CMS provider enrollment files), resolving each TiC sub-group's NPIs to their billing organization before the join rather than assuming EIN equivalence. Out of scope at three hospitals; mandatory before this keys a national run.
+- **Mount Sinai × Aetna × 872 is a matched (`both`) row, not a gap.** HPT posts a median **$26,918** across 4 plans (range $13,708–$36,574, which contains the brief's $29,259.18); TiC pays a median **$13,365** — roughly **half** (−50%). The key matches, but the hospital's posted DRG rate is far from the payer's, and the exact $29,259.18 has no TiC counterpart — so "you will not see that rate" is true *as a divergent match*, the question-3 case on a DRG.
+- **Montefiore (3 plans, $13,434–$51,351) and NYU (18 plans, $10,077–$93,157) × Aetna × 872 are true gaps** — no Aetna 872 on the TiC side for those hospitals, so they collapse to `data_source=hpt_only`.
+
+So the example exercises both halves of what the brief is probing: a divergent DRG match where hospital and payer disagree by ~2×, and one-sided `hpt_only` rows. Commercial DRG postings being dense on the hospital side and sparse-or-divergent on the payer side is the structural pattern, not a bug.
 
 ### Worked example I *do* have
 
